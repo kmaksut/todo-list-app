@@ -55,8 +55,7 @@
                                 <IconCheck stroke=2 color='var(--text-color)' size=16/>
                             {/if}
                         </div>
-                        <!-- style="text-decoration: {item.isDone ? "line-through": "none"} ;" -->
-                        <p class="static-list-items-text">{item.text}</p>
+                        <p style="text-decoration: {item.isDone ? "line-through": "none"} ;" class="static-list-items-text">{item.text}</p>
                         <button on:click={addStar(item.id)} class="add-star-btn">
                             <IconStar stroke=1 color='orange' fill={item.isStar ? "orange" : "transparent"} size=18/>
                         </button>

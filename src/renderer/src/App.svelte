@@ -6,8 +6,6 @@
   import TodoList from './components/sidebar/routes/TodoList.svelte'
   import DoneList from './components/sidebar/routes/DoneList.svelte'
   import StarsList from './components/sidebar/routes/StarsList.svelte'
-  import Updates from './components/updates/Updates.svelte'
-  import { onMount } from 'svelte'
 </script>
 
 <div class="container">
