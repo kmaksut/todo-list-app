@@ -1,0 +1,21 @@
+:root{
+    --theme-light-sidebar: #f4f4f4;
+    --theme-light-todo: #e7ecf0; 
+    --hover-color: #ebebeb; 
+    --text-color: #586570ef;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    user-select: none;
+    overflow: hidden;
+}
+
+body{
+    width: 100%;
+    height: 100vh;
+    background-color: var(--theme-light-sidebar);
+    color: var(--bg-color);
+    font-family: arial;
+}
