@@ -2,7 +2,6 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { autoUpdater } from 'electron-updater'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -29,13 +28,6 @@ function createWindow(): void {
     mainWindow.webContents.send('get-cook-renderer', args)
     console.log(args); 
   })
-  autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('update-available', info);
-    })
-  
-  autoUpdater.on('update-downloaded', (info) => {
-    mainWindow.webContents.send('update-downloaded', info);
-    })
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -47,12 +39,6 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
-  if (!app.isPackaged) {
-    autoUpdater.autoDownload = false;
-    autoUpdater.checkForUpdates();
-  } else {
-    autoUpdater.checkForUpdatesAndNotify();
-  }
   // IPC test
   // ipcMain.on('ping', () => console.log('pong'))
   createWindow()
