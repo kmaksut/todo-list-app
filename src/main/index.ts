@@ -1,22 +1,27 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+<<<<<<< HEAD
 import icon from '../../resources/icon.png?asset'
+=======
+import fs from 'fs'
+
+const cfgLoc = join(app.getPath('userData'), 'todos', 'todo.json');
+>>>>>>> development
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1020,
     height: 720,
     resizable: false,
-    show: false, 
+    show: false,    
     autoHideMenuBar: true,
     fullscreenable: false,
-    ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
+    webPreferences: { 
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
-  })
+  })  
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -24,10 +29,48 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+<<<<<<< HEAD
   ipcMain.on('get-cookies', (_event ,args)=> {
     mainWindow.webContents.send('get-cook-renderer', args)
     console.log(args); 
   })
+=======
+  // IPC Functions
+  function saveTodos(todos) {
+    fs.writeFileSync(cfgLoc, JSON.stringify(todos));
+  }
+  
+  function loadTodos() {
+    if (fs.existsSync(cfgLoc)) {
+      const data = fs.readFileSync(cfgLoc);
+      //@ts-ignore
+      return JSON.parse(data);
+    }
+    return [];
+  }
+  // IPC Proccess
+  ipcMain.handle('load-todos', () => { 
+    return loadTodos();
+  });
+  
+  ipcMain.handle('save-todos', (_event, todos) => {
+    saveTodos(todos);
+  });
+
+  ipcMain.handle('dark-mode:toggle', () => { 
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+  
+  ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'light'
+  })
+  
+>>>>>>> development
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -39,8 +82,11 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+<<<<<<< HEAD
   // IPC test
   // ipcMain.on('ping', () => console.log('pong'))
+=======
+>>>>>>> development
   createWindow()
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -50,5 +96,4 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-
 })

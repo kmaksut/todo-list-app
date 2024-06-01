@@ -1,28 +1,20 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-// Custom APIs for renderer
 const api = {
-  getCook: (args) => ipcRenderer.send('get-cookies', args),
-  getCookToRenderer: (arg) => ipcRenderer.on('get-cook-renderer', arg),
-  updateCheck: (callback) => ipcRenderer.on('update-available', (_, info) => {
-    callback(info)
-  }),
-  updateDownloaded: (callback) => ipcRenderer.on('update-downloaded', (_, info) => {
-    callback(info)
-  })
+  loadTodos: () => ipcRenderer.invoke('load-todos'),
+  saveTodos: (todos) => ipcRenderer.invoke('save-todos', todos),
+  toggle: () => ipcRenderer.invoke('dark-mode:toggle'),
+  system: () => ipcRenderer.invoke('dark-mode:system')
 }
-   
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+
 if (process.contextIsolated) {
-  try {
+  try { 
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
+  } catch (error) { 
     console.error(error)
-  }
+  } 
 } else {
   // @ts-ignore (define in dts)
   window.electron = electronAPI

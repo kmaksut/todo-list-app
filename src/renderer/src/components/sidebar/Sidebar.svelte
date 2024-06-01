@@ -1,85 +1,72 @@
 <script>
-    import { IconListCheck, IconList, IconStar, IconPencil } from "@tabler/icons-svelte";
-    import { mainTodoActive, doneTodoActive, starsTodoActive, doneTodoList, starsTodoList, todoListMain, userInfo } from '../../store/stores'
-    // import { v4 as uuidv4} from 'uuid'
+// @ts-nocheck
+    import { IconListCheck, IconList, IconStar, IconEyeClosed, IconEye, IconSettings } from "@tabler/icons-svelte";
+    import { mainTodoActive, doneTodoActive, starsTodoActive, secretTodoActive, doneTodoList, starsTodoList, todoListMain, secretTodoList, userInfo, renderSecret, optionsActive } from '../../store/stores'
+    import profileIcon from '../../assets/profile.png?asset'
+    import { onMount } from "svelte"
+    import Options from "./routes/Options.svelte"
     // Variables
-    let userInformations = false
-    let activeTabName = ""
-    let activeTabSurname = ""
-    let activeTabDescription = ""
-    // Functions
-    function userInfoToggle() {
-        userInformations = !userInformations
-    }
-    function userInfoChange() {
-        if (activeTabName == '' || activeTabSurname == '' || activeTabDescription == '') false
-        else{
-            userInfo.update(value => value.filter(curr => curr.name = activeTabName))
-            userInfo.update(value => value.filter(curr => curr.surname = activeTabSurname))
-            userInfo.update(value => value.filter(curr => curr.description = activeTabDescription))
-            activeTabName = activeTabSurname = activeTabDescription = ""
-        }
-        console.log($userInfo);
-    }
+    /**
+     * @type {boolean} 
+     */
+    let themeSwitcher = false;
+    // Reactive 
+    $: themeSwitcher ? window.api.toggle() :  window.api.toggle()
 </script>
 
 <div class="sidebar">
     <div class="sidebar-container">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div on:click={userInfoToggle} class="profile-section {userInformations ? "profile-section-active" : ""}">
+        <div class="profile-section">
             <div class="profile-section-top">
-                <img class="profile-img" src={$userInfo[0].profileIcon} alt="profile">
+                <img class="profile-img" src={profileIcon} alt="profile">
                 <div class="profile-text">
                     <p class="profile-name">{$userInfo[0].name} {$userInfo[0].surname}</p>
                     <p class="description">{$userInfo[0].description}</p>
                 </div>
             </div>
         </div>
-        {#if userInformations}
-            <div class="add-profile">
-                <div class="active-profile-tab">
-                    <div class="active-profile-tab-ui">
-                        <img class="active-tab-icon" src={$userInfo[0].profileIcon} alt="profileIcon">
-                        <span class="active-tab-cp">
-                            <IconPencil size=20 color="white"/>
-                        </span>
-                        <div class="active-tab-text-container">
-                            <p class="active-tab-text">{$userInfo[0].name} {$userInfo[0].surname}</p>
-                            <p class="active-tab-description">{$userInfo[0].description}</p>    
-                        </div>
-                    </div>
-                    <div class="active-tab-ci-container">
-                        <div class="inputlist">
-                            <p>İsim</p>
-                            <input bind:value={activeTabName} type="text">
-                            <p>Soyisim</p>
-                            <input bind:value={activeTabSurname} type="text">
-                            <p>Açıklama</p>
-                            <input bind:value={activeTabDescription} type="text">    
-                        </div>
-                        <dir>
-                            <button on:click={userInfoChange}>Değiştir</button>
-                        </dir>
-                    </div>
-                </div>
-            </div>
-        {/if}
         <hr class="separator">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div class="sidebar-menu-items">
             <div on:click={todoListMain} class="static-sidebar-item {$mainTodoActive ? "active-tab" : ""}">
-                <IconList stroke=1 color="purple" size=18/> 
+                <IconList  class="IconList" stroke=1 color="purple" size=20/> 
                 Yapılacaklar
             </div>
             <div on:click={doneTodoList} class="static-sidebar-item {$doneTodoActive ? "active-tab" : ""}">
-                <IconListCheck stroke=1 color="green" size=18/>
+                <IconListCheck stroke=1 color="green" size=20/>
                 Tamamlanmış
             </div>
             <div on:click={starsTodoList} class="static-sidebar-item {$starsTodoActive ? "active-tab" : ""}">
-                <IconStar stroke=1 color="orange" fill={$starsTodoActive?"orange":"transparent"} size=18/>
+                <IconStar stroke=1 color="orange" fill={$starsTodoActive?"orange":"transparent"} size=20/>
                 Önemli
+            </div>
+            <div on:click={secretTodoList} class="static-sidebar-item {$secretTodoActive ? "active-tab" : ""}">
+                {#if $renderSecret}
+                    <IconEye stroke=2 color="gray" size=20/>
+                {:else}
+                    <IconEyeClosed stroke=1.5 color="gray" size=18/>
+                {/if}
+                Gizli
+            </div>
+        </div>
+        <div class="sidebar-bottom">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div on:click={()=>optionsActive.set(!$optionsActive)} class="static-sidebar-item">
+                <IconSettings size=20 />
+                <p class="settings-text">Ayarlar</p>
+            </div>
+            {#if $optionsActive}
+                <Options />
+            {/if}
+            <div class="switch">
+                <p class="switch-text">Light</p>
+                <input bind:checked={themeSwitcher} type="checkbox" id="switch">
+                <label for="switch"></label>
+                <p>Dark</p>
             </div>
         </div>
     </div>
@@ -109,23 +96,6 @@
         column-gap: 10px;
     }
 
-    .add-profile{
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        height: 400px;
-        left: 240px;
-        top: 10px;
-        background-color: var(--theme-light-sidebar);
-        border-radius: 15px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-    }
-
-    .profile-section:hover{
-        background-color: #ebebeb92;
-    }
-
     .profile-img{
         width: 50px;
         height: 50px;
@@ -152,7 +122,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        row-gap: 5px;
+        row-gap: 7px;
     }
 
     .static-sidebar-item{
@@ -162,7 +132,7 @@
         align-items: center;
         width: 85%;
         height: 45px;
-        font-size: .8em;
+        font-size: .9em;
         padding-left: 10px;
         border-radius: 5px;
     }
@@ -183,82 +153,7 @@
         height: 18px;
         border-radius: 30px;
         background-color: rgba(0, 128, 0, 0.9);
-    }
-
-    .active-tab-icon{
-        width: 80px;
-        border-radius: 50%;        
-    }
-
-    .active-tab-cp{
-        width: 25px;
-        height: 25px;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        top: 80px;
-        right: 200px;
-        border-radius: 50%;
-        background-color: rgba(0, 128, 0, 0.9);
-        cursor: pointer;
-    }
-
-    .active-profile-tab-ui{
-        display: flex;
-        flex-direction: row;
-        height: 90px;
-        border-radius: 10px;
-        padding: 10px ;
-        align-items: center;
-        column-gap: 15px;
-        margin: 10px;
-        background-color: var(--hover-color);
-    }
-
-    .active-tab-text-container{
-        display: flex;
-        flex-direction: column;
-        row-gap: 5px;
-    }
-
-    .active-tab-text{
-        font-size: 1.1em;
-        font-weight: bold;
-    }
-
-    .active-tab-description{
-        font-size: .9em;
-    }
-
-    .active-tab-ci-container input{
-        width: 88%;
-        height: 30px;
-        margin-top: 5px;
-        margin-left: 10px;
-        outline: none;
-        border: 1px solid rgba(0, 0, 0, 0.266);
-        border-radius: 5px;
-        padding-left: 10px;
-    }
-
-    .active-tab-ci-container button{
-        border: none;
-        width: 92%;
-        height: 45px;
-        border-radius: 10px;
-        background-color: rgba(0, 128, 0, 0.6);
-        color: white;
-        font-family: arial;
-        margin-top: 20px;
-        margin-left: 10px;
-        cursor: pointer;
-    }
-
-    .active-tab-ci-container p{
-        font-size: .9em;
-        margin-left: 12px;
-        margin-top: 10px;
+        animation: activeEffect .1.5s ease-in;
     }
 
     .separator {
@@ -267,5 +162,72 @@
         margin-bottom: 15px;
         border-top: 1px solid rgba(0, 0, 0, 0.2);
     }
-  
+
+    .sidebar-bottom{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        row-gap: 10px;
+        margin-top: 240px;
+        width: 100%;
+    }
+
+    .switch{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
+        border-top: 1px solid rgba(0, 0, 0, 0.2);
+        padding-top: 10px;
+        width: 195px;
+        height: 50px;
+    }
+
+    input[type=checkbox]{
+        height: 0;
+        width: 0;
+        visibility: hidden;
+    }
+
+    label{
+        cursor: pointer;
+        width: 50px;
+        height: 30px;
+        background: var(--text-color);
+        display: block;
+        border-radius: 15px;
+        position: relative;        
+    }
+
+    label::after{
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 20px;
+        height: 20px;
+        background: url('../../assets/moon-stars.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        border-radius: 90px;
+        transition: 0.8s, background .5s;
+    }
+
+    input:checked + label::after{
+        left: calc(100% - 5px);
+        transform: translateX(-100%);
+    } 
+
+    @keyframes activeEffect {
+        0%{
+            height: 0px;
+        }
+        50%{
+            height: 10px;
+        }
+        100%{
+            height: 18px;
+        }
+    }
 </style>

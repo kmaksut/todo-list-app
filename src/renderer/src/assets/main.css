@@ -3,6 +3,9 @@
     --theme-light-todo: #e7ecf0; 
     --hover-color: #ebebeb; 
     --text-color: #586570ef;
+    --dark-mode: rgb(32,32,32); 
+    --dark-mode-text: rgb(219, 219, 219); 
+    --dark-mode-hover-color: rgb(66, 66, 66); 
 }
 
 *{
@@ -16,6 +19,38 @@ body{
     width: 100%;
     height: 100vh;
     background-color: var(--theme-light-sidebar);
-    color: var(--bg-color);
+    color: var(--text-color);
     font-family: arial;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* sidebar */
+    body { background: var(--dark-mode); color: var(--dark-mode-text); transition: background-color .3s;}
+    .active-tab{background-color: var(--dark-mode-hover-color) !important;}
+    .static-sidebar-item:hover{background-color: var(--dark-mode-hover-color) !important;}
+    .active-tab:after{background-color: rgba(233, 230, 35, 0.8) !important;}
+    label::after{background: url('../assets/sun-high.svg') !important; background-size: contain !important;  }
+    input:checked + label{background:var(--theme-light-sidebar) !important;}
+    .switch{border-top-color: var(--theme-light-sidebar) !important;}
+    /* TodoList */
+    .IconList{stroke: rgb(0, 255, 255) !important;}
+    .todo-text{color: var(--dark-mode-text) !important;}
+    .todo-day{color: rgb(219, 219, 219, 0.7) !important;}
+    .static-list-items:hover{background-color: rgb(42, 42, 42) !important;}
+    .static-list-items{background-color: var(--dark-mode) !important; color: var(--dark-mode-text) !important;}
+    .todo-input{background-color: var(--dark-mode) !important; color: var(--dark-mode-text); background-image: url('../assets/plusdark.svg') !important;}
+    /* DoneList */
+    .done-text{color: var(--dark-mode-text) !important;}
+    .done-day{color: rgb(219, 219, 219, 0.7) !important;}
+    .static-donelist-item{background-color: var(--dark-mode) !important;}
+    /* StarsList */
+    .starslist-text{color: var(--dark-mode-text) !important;}
+    .starslist-day{color: rgb(219, 219, 219, 0.7) !important;}
+    .static-starslist-items{background-color: var(--dark-mode) !important;}
+    /* SecretList */
+    /* Placeholder */
+    .empty-page-text{color: var(--dark-mode-text) !important;}
+  }
+@media (prefers-color-scheme: light) {
+    body { background: var(--theme-light-sidebar); transition: background-color .3s; }
+  }
