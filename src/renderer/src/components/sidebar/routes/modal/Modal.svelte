@@ -3,11 +3,17 @@
     import { IconAlertTriangle, IconX} from '@tabler/icons-svelte'
     // Functions
     function chooseYes() {
-        todos.set([])
+        // @ts-ignore
+        todos.update(value => {
+            const updatedTodoList = [];
+                // @ts-ignore
+                window.api.saveTodos(updatedTodoList)
+                return updatedTodoList;
+        });
         modalChoose.set(false)
     }
     function chooseNo() {
-        modalChoose.set(false)
+        return modalChoose.set(false)
     }
 </script>
 
@@ -23,7 +29,7 @@
             </div>
         </div>
         <div class="modal-separator"></div>
-        <p class="modal-text">Listenin tamamını silmek istediğinden eminmisin ? tüm yıldızlı ve bitirilmiş görevler kaldırılacak ...</p>
+        <p class="modal-text">Listenin tamamını silmek istediğinden eminmisin ? <br> Tüm yıldızlı ve bitirilmiş görevler kaldırılacak ...</p>
         <div class="modal-separator"></div>
         <div class="modal-bottom">
             <button on:click={chooseYes} class="static-choose chooseYes">Evet</button>
@@ -40,13 +46,15 @@
         position: absolute;
         width: 100%;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.2);
+        /* background-color: rgba(0, 0, 0, 0.2); */
     }
 
     .modal{
         width: 370px;
         min-height: 150px;
-        background-color: rgb(106, 93, 106);
+        background-color: rgb(106, 93, 106, .7);
+        backdrop-filter: blur(6px);
+        box-shadow: 2px 2px 10px black;
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.692);
     }
@@ -59,8 +67,8 @@
     }
 
     .modal-close{
-        position: absolute;
-        right: 350px;
+        /* position: absolute; */
+        margin-left: 190px;
     }
 
     .modal-bottom{
@@ -90,7 +98,8 @@
     }
 
     .chooseYes {
-        background-color: rgba(88, 2, 88, 0.4);
+        /* background-color: rgba(88, 2, 88, 0.4); */
+        background-color: rgb(0, 255, 0, .5);
         color: white;
     }
 
