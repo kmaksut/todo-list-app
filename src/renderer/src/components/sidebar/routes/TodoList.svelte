@@ -14,19 +14,16 @@
     // functions
     onMount(()=>{
         day = nowDate()
-        window.api.updateCheck((info) => {
-            updateAvailableMessage = 'Yeni Güncelleme Mevcut'
-        });
-
-        window.api.updateDownloaded((info) => {
-            updateDownloadedMessage = 'Yeni Güncelleme İndirildi'
-        });
     })
     function handleKeyPress(e) {
         if (inputValue == '' || !/[a-zA-Z0-9]/.test(inputValue)) false
         else{
             if (e.key == 'Enter') {
-                todos.update(value => [...value, {id: uuidv4(), text: inputValue, isStar: false, isDone: false}])
+                todos.update(value => {
+                    const updatedTodoList = [...value, {id: uuidv4(), text: inputValue, isStar: false, isDone: false}];
+                    window.api.saveTodos(updatedTodoList)
+                    return updatedTodoList;
+                } )
                 inputValue = '';
             }
         }
@@ -165,7 +162,6 @@
 
     .static-list-items:hover{
         background-color: var(--hover-color);
-        cursor: pointer;
     }
 
     .static-list-items-text{
