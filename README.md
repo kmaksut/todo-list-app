@@ -2,16 +2,8 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/kmaksut/todo-list-app) ![Static Badge](https://img.shields.io/badge/status-continues-orange)
 ---
 
-<<<<<<< HEAD
-An Electron application with Svelte and TypeScript
 
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode)
-https://img.shields.io/github/commit-activity/t/kmaksut/todo-list-app
-=======
-Electron + Svelte + Vite Todo List App.
->>>>>>> main
+Electron + Svelte + Vite - Todo list application.
 
 ## Project Setup
 
