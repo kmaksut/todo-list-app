@@ -3,7 +3,7 @@
     import { onMount } from "svelte"
     import { todos, removeItem, addStar, nowDate } from "../../../store/stores";
     import { IconStar, IconX } from '@tabler/icons-svelte'
-  import EmptyPage from "./placeholders/EmptyPage.svelte"
+    import EmptyPage from "./placeholders/EmptyPage.svelte"
     // Variables
     let day;
     // Functions

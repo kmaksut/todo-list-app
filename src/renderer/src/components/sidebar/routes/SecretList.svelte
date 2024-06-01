@@ -1,7 +1,6 @@
 <script>
     // @ts-nocheck
     import { userInfo, renderSecret } from "../../../store/stores";
-    import { dndzone } from "svelte-dnd-action";
     import { writable } from 'svelte/store';
 
     let passwordValue;
@@ -19,7 +18,7 @@
                 passwordValue = ''
             }
         }
-    }
+    } 
 
 </script>
 

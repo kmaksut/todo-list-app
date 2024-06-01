@@ -1,17 +1,13 @@
 import { app, shell, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-<<<<<<< HEAD
-import icon from '../../resources/icon.png?asset'
-=======
 import fs from 'fs'
 
 const cfgLoc = join(app.getPath('userData'), 'todos', 'todo.json');
->>>>>>> development
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1020,
+    width: 1020, 
     height: 720,
     resizable: false,
     show: false,    
@@ -29,12 +25,6 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-<<<<<<< HEAD
-  ipcMain.on('get-cookies', (_event ,args)=> {
-    mainWindow.webContents.send('get-cook-renderer', args)
-    console.log(args); 
-  })
-=======
   // IPC Functions
   function saveTodos(todos) {
     fs.writeFileSync(cfgLoc, JSON.stringify(todos));
@@ -70,7 +60,6 @@ function createWindow(): void {
     nativeTheme.themeSource = 'light'
   })
   
->>>>>>> development
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -82,11 +71,6 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
-<<<<<<< HEAD
-  // IPC test
-  // ipcMain.on('ping', () => console.log('pong'))
-=======
->>>>>>> development
   createWindow()
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
